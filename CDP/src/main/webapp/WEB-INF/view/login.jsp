@@ -4,11 +4,11 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>CDP Project</title>
+<title>Login Page</title>
 </head>
 <body>
-	<h1>
-	${hello}
-	 </h1>
+ <h1>
+ ${message}
+ </h1>
 </body>
 </html>

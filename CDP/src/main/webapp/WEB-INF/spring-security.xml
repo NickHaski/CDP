@@ -6,16 +6,43 @@
 	http://www.springframework.org/schema/security
 	http://www.springframework.org/schema/security/spring-security-3.2.xsd">
  
-	<http auto-config="true">
-		<intercept-url pattern="/admin**" access="ROLE_USER" />
+	<http auto-config="true" >
+			
+			<form-login 
+				login-processing-url="/login"
+				login-page="/loginPage" 
+				authentication-failure-url="/login?auth=fail"
+				username-parameter="username"
+				password-parameter="password"
+				default-target-url="/user" />
+			<logout logout-url="/logout" logout-success-url="/loginPage"/>
+			
+		<intercept-url pattern="/user" access="ROLE_USER" />
 	</http>
- 
+
 	<authentication-manager>
 	  <authentication-provider>
-	    <user-service>
-			<user name="nick" password="123456" authorities="ROLE_USER" />
-	    </user-service>
+	  	<jdbc-user-service id="userService"
+			data-source-ref="dataSource"
+			users-by-username-query="select name, password, enabled from user where name=?"
+					authorities-by-username-query="SELECT u.name, r.role FROM user u 
+			LEFT JOIN user_role ur ON ur.iduser=u.id
+			LEFT JOIN role r ON r.id=ur.idrole
+			WHERE u.name=?"/>
+			
 	  </authentication-provider>
 	</authentication-manager>
- 
+
+	
+	<beans:bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+	       <beans:property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+	       <beans:property name="url" value="jdbc:mysql://localhost:3306/my_cdp"/>
+	       <beans:property name="username" value="root"/>
+	       <beans:property name="password" value=""/>
+	</beans:bean>
+		
+		
+		
+	
+
 </beans:beans>
